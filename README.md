@@ -1,0 +1,4 @@
+SensorManager
+=============
+
+First Assingment AiCQ
