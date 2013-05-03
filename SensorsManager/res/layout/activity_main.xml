@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <Button
+        android:id="@+id/buttonSetBaseValues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/set_base_values" />
+
+    <Button
+        android:id="@+id/buttonAccuracyLess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonSetBaseValues"
+        android:layout_alignBottom="@+id/buttonSetBaseValues"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="47dp"
+        android:text="@string/accuracy_less" />
+
+    <Button
+        android:id="@+id/buttonAccuracyPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonSetBaseValues"
+        android:layout_alignBottom="@+id/buttonSetBaseValues"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="47dp"
+        android:text="@string/accuracy_plus" />
+
+    <TextView
+        android:id="@+id/label2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="63dp"
+        android:text="@string/large_text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/label3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/label2"
+        android:layout_marginTop="58dp"
+        android:text="@string/large_text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/label1"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="@string/large_text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+   
+</RelativeLayout>
