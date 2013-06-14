@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	TextView textViewAccuracy, textViewImputValues, textViewCodified;
-	Button button, plus, less, stop;
+	Button buttonSetBaseValues, buttonAccuracyPlus, buttonAccuracyLess;
 	Sensor accelerometer;
 	SensorManager sensorManager;
 	InputListener inputListenerInstance;
@@ -60,8 +60,8 @@ public class MainActivity extends Activity {
 	}
 
 	private void setButtonAction() {
-		button = (Button) findViewById(R.id.buttonSetBaseValues);
-		button.setOnClickListener(new OnClickListener() {
+		buttonSetBaseValues = (Button) findViewById(R.id.buttonSetBaseValues);
+		buttonSetBaseValues.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (inputListenerInstance != null) {
@@ -70,22 +70,22 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		plus = (Button) findViewById(R.id.buttonAccuracyPlus);
-		plus.setOnClickListener(new OnClickListener() {
+		buttonAccuracyPlus = (Button) findViewById(R.id.buttonAccuracyPlus);
+		buttonAccuracyPlus.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(inputListenerInstance != null){
+				if (inputListenerInstance != null) {
 					inputListenerInstance.modifyAccuracy("IncreaseAccuracy");
 				}
 			}
 		});
 
-		less = (Button) findViewById(R.id.buttonAccuracyLess);
-		less.setOnClickListener(new OnClickListener() {
+		buttonAccuracyLess = (Button) findViewById(R.id.buttonAccuracyLess);
+		buttonAccuracyLess.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(inputListenerInstance != null){
+				if (inputListenerInstance != null) {
 					inputListenerInstance.modifyAccuracy("ReduceAccuracy");
 				}
 			}
@@ -98,15 +98,11 @@ public class MainActivity extends Activity {
 		accelerometer = sensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 	}
-	
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
 }
-

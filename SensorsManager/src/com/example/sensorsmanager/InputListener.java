@@ -6,40 +6,39 @@ import android.hardware.SensorEventListener;
 import android.widget.TextView;
 
 public class InputListener implements SensorEventListener {
-
-	public float[] previousValues;
-	public float[] sensorLectures;
-	public int[] codifiedValues;
-
-	public float offsetX, offsetY, offsetZ;
-	public float accuracy;
-	int min = 0;
-	int max = 255;
+	private float[] offset;
+	private float[] previousValues;
+	private float[] sensorLectures;
+	private int[] codifiedValues;
+	private boolean newBaseValues;
+	private float accuracy;
+	private static final int min = 0;
+	private static final int max = 255;
 
 	public TextView labelAccelerometer;
 	public TextView labelAccuracy;
 	public TextView labelCod;
 
 	public InputListener() {
+
 		accuracy = 0.0f;
+		offset = new float[3];
 		previousValues = new float[3];
 		sensorLectures = new float[3];
 		codifiedValues = new int[3];
+		newBaseValues = false;
 		for (int axisIndex = 0; axisIndex < 3; axisIndex++) {
-			previousValues[axisIndex] = 0;
-			sensorLectures[axisIndex] = 0;
+			previousValues[axisIndex] = 0.0f;
+			sensorLectures[axisIndex] = 0.0f;
 			codifiedValues[axisIndex] = 0;
-		}
 
-		offsetX = offsetY = offsetZ = 0f;
-		accuracy = 0f;
+			offset[axisIndex] = 0.0f;
+		}
 	}
 
-	public void processValues(float[] imputValues) {
-		float temporalEventValues[] = imputValues;
+	public void processValues() {
+		float temporalEventValues[] = sensorLectures;
 		float calibratedEventValues[];
-
-		sensorLectures = imputValues;
 
 		calibratedEventValues = applyOffsetToImputValues(temporalEventValues);
 		if (significativeChanges(calibratedEventValues)) {
@@ -52,14 +51,18 @@ public class InputListener implements SensorEventListener {
 	public float[] applyOffsetToImputValues(float[] imputValuesToCalibrate) {
 
 		float[] calibratedImputValues = new float[3];
-		calibratedImputValues[0] = imputValuesToCalibrate[0] + offsetX;
-		calibratedImputValues[1] = imputValuesToCalibrate[1] + offsetY;
-		calibratedImputValues[2] = imputValuesToCalibrate[2] + offsetZ;
+		calibratedImputValues[0] = imputValuesToCalibrate[0] + offset[0];
+		calibratedImputValues[1] = imputValuesToCalibrate[1] + offset[1];
+		calibratedImputValues[2] = imputValuesToCalibrate[2] + offset[2];
 
 		return calibratedImputValues;
 	}
 
 	public boolean significativeChanges(float[] calibratedEventValues) {
+		if (newBaseValues) {
+			newBaseValues = false;
+			return true;
+		}
 		for (int axisIndex = 0; axisIndex < 3; axisIndex++) {
 			if (calibratedEventValues[axisIndex] > previousValues[axisIndex]
 					+ accuracy
@@ -75,10 +78,11 @@ public class InputListener implements SensorEventListener {
 
 		int temporalCodifiedValue;
 		int[] temporalCodifiedValues = new int[3];
+		double slope = 0.078125;
 
 		for (int axisIndex = 0; axisIndex < 3; axisIndex++) {
 			if (calibratedEventValues[axisIndex] != 0) {
-				temporalCodifiedValue = (int) ((calibratedEventValues[axisIndex] + 10) / 0.078125);
+				temporalCodifiedValue = (int) ((calibratedEventValues[axisIndex] + 10) / slope);
 
 				if (temporalCodifiedValue < min)
 					temporalCodifiedValues[axisIndex] = min;
@@ -121,7 +125,7 @@ public class InputListener implements SensorEventListener {
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
 			sensorLectures = event.values;
-			processValues(event.values);
+			processValues();
 		}
 	}
 
@@ -129,28 +133,24 @@ public class InputListener implements SensorEventListener {
 		if (action.equals("IncreaseAccuracy")) {
 			accuracy -= 0.01f;
 			accuracy = Math.max(accuracy, 0.0f);
-
+			return accuracy;
 		} else {
 			if (action.equals("ReduceAccuracy")) {
 				accuracy += 0.01f;
 				accuracy = Math.min(accuracy, 10.5f);
-
+				return accuracy;
 			}
 		}
 		return accuracy;
 	}
 
 	public float[] setBaseValues() {
-		float[] testResult = new float[3];
 		if (sensorLectures != null) {
-			offsetX = -sensorLectures[0];
-			offsetY = -sensorLectures[1];
-			offsetZ = -sensorLectures[2];
-			testResult[0] = offsetX;
-			testResult[1] = offsetY;
-			testResult[2] = offsetZ;
+			offset[0] = -sensorLectures[0];
+			offset[1] = -sensorLectures[1];
+			offset[2] = -sensorLectures[2];
 		}
-		return testResult;
+		return offset;
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
